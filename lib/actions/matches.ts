@@ -1,13 +1,12 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendJobMatch } from "@/lib/email";
+import { isAdminAuthorized } from "@/lib/admin-token";
 import { revalidatePath } from "next/cache";
 
 export async function createMatch(data: FormData) {
-  const session = await auth();
-  if (!session?.user.isAdmin) return { ok: false, message: "Unauthorized" };
+  if (!(await isAdminAuthorized())) return { ok: false, message: "Unauthorized" };
 
   const userId = data.get("userId") as string;
   const jobId = data.get("jobId") as string;

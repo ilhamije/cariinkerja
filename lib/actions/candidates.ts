@@ -1,13 +1,12 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendProfileActivated } from "@/lib/email";
+import { isAdminAuthorized } from "@/lib/admin-token";
 import { revalidatePath } from "next/cache";
 
 export async function updateCandidateStatus(candidateId: string, status: string) {
-  const session = await auth();
-  if (!session?.user.isAdmin) return { message: "Unauthorized" };
+  if (!(await isAdminAuthorized())) return { message: "Unauthorized" };
 
   const user = await prisma.user.update({
     where: { id: candidateId },

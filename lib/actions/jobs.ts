@@ -1,14 +1,13 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
+import { isAdminAuthorized } from "@/lib/admin-token";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function saveJob(data: FormData, id?: string) {
-  const session = await auth();
-  if (!session?.user.isAdmin) return { message: "Unauthorized" };
+  if (!(await isAdminAuthorized())) return { message: "Unauthorized" };
 
   const title = data.get("title") as string;
   const company = data.get("company") as string;

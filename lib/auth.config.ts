@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import LinkedIn from "next-auth/providers/linkedin";
+import { computeAdminToken } from "@/lib/admin-token";
 
 const adminEmails = (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim());
 
@@ -23,12 +24,21 @@ export const authConfig: NextAuthConfig = {
       }
       return session;
     },
-    authorized({ auth, request: { nextUrl } }) {
+    async authorized({ auth, request }) {
       const isLoggedIn = !!auth?.user;
       const isAdmin = (auth?.user as { isAdmin?: boolean })?.isAdmin === true;
-      const path = nextUrl.pathname;
+      const path = request.nextUrl.pathname;
 
-      if (path.startsWith("/admin")) return isAdmin;
+      if (path.startsWith("/admin")) {
+        if (path === "/admin/login") return true;
+        if (isAdmin) return true;
+        const adminToken = request.cookies.get("admin_token")?.value;
+        if (adminToken) {
+          const expected = await computeAdminToken();
+          if (adminToken === expected) return true;
+        }
+        return Response.redirect(new URL("/admin/login", request.nextUrl));
+      }
       if (path.startsWith("/dashboard") || path.startsWith("/profile")) return isLoggedIn;
       return true;
     },

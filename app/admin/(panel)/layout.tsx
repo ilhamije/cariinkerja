@@ -1,5 +1,7 @@
 import { auth } from "@/lib/auth";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { computeAdminToken } from "@/lib/admin-token";
 import Link from "next/link";
 
 const NAV = [
@@ -11,7 +13,14 @@ const NAV = [
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!session?.user.isAdmin) redirect("/");
+  const isAdminByEmail = session?.user.isAdmin;
+
+  if (!isAdminByEmail) {
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("admin_token")?.value;
+    const expected = await computeAdminToken();
+    if (!adminToken || adminToken !== expected) redirect("/admin/login");
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -33,7 +42,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           ))}
         </nav>
         <div className="p-4 border-t border-white/10">
-          <p className="text-xs text-white/50">{session.user.email}</p>
+          <p className="text-xs text-white/50">
+            {session?.user.email ?? "Password auth"}
+          </p>
         </div>
       </aside>
 
