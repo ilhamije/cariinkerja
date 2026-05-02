@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { sendJobMatch } from "@/lib/email";
+// import { sendJobMatch } from "@/lib/email";
 import { isAdminAuthorized } from "@/lib/admin-token";
 import { revalidatePath } from "next/cache";
 
@@ -24,8 +24,22 @@ export async function createMatch(data: FormData) {
     data: { userId, jobId, matchRate, note: note || null, notified: true },
   });
 
-  await sendJobMatch(user.email, user.name, job, note);
+  // await sendJobMatch(user.email, user.name, job, note);
+  console.log("[email] Job match →", user.name ?? "unknown", `<${user.email}>`, "|", job.title, "at", job.company, note ? `| note: ${note}` : "");
 
   revalidatePath("/admin/matches");
-  return { ok: true, message: `Match created and email sent to ${user.email}.` };
+  revalidatePath("/admin/candidates");
+  revalidatePath(`/admin/candidates/${userId}`);
+  return { ok: true, message: `Match created. (Email logged to console — Resend not wired yet.)` };
+}
+
+export async function deleteMatch(matchId: string, candidateId?: string) {
+  if (!(await isAdminAuthorized())) return { ok: false, message: "Unauthorized" };
+
+  await prisma.match.delete({ where: { id: matchId } });
+
+  revalidatePath("/admin/matches");
+  revalidatePath("/admin/candidates");
+  if (candidateId) revalidatePath(`/admin/candidates/${candidateId}`);
+  return { ok: true };
 }

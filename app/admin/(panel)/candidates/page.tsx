@@ -10,15 +10,69 @@ const STATUS_VARIANT: Record<string, "warning" | "accent" | "success" | "default
   PAUSED: "default",
 };
 
-export default async function AdminCandidatesPage() {
+const STATUSES = ["PENDING", "UNDER_REVIEW", "ACTIVE", "PAUSED"];
+
+interface Props {
+  searchParams: Promise<{ q?: string; status?: string }>;
+}
+
+export default async function AdminCandidatesPage({ searchParams }: Props) {
+  const { q, status } = await searchParams;
+
   const candidates = await prisma.user.findMany({
+    where: {
+      ...(status ? { status } : {}),
+      ...(q
+        ? {
+            OR: [
+              { name: { contains: q } },
+              { email: { contains: q } },
+            ],
+          }
+        : {}),
+    },
     orderBy: { createdAt: "desc" },
     include: { _count: { select: { matches: true } } },
   });
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-primary mb-8">Candidates</h1>
+      <h1 className="text-2xl font-bold text-primary mb-6">Candidates</h1>
+
+      {/* Filters */}
+      <form method="GET" className="flex gap-3 mb-6">
+        <input
+          type="text"
+          name="q"
+          defaultValue={q}
+          placeholder="Search by name or email…"
+          className="h-9 flex-1 max-w-xs rounded-lg border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+        />
+        <select
+          name="status"
+          defaultValue={status ?? ""}
+          className="h-9 rounded-lg border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+        >
+          <option value="">All statuses</option>
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>{s.replace("_", " ")}</option>
+          ))}
+        </select>
+        <button
+          type="submit"
+          className="h-9 px-4 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+        >
+          Filter
+        </button>
+        {(q || status) && (
+          <a
+            href="/admin/candidates"
+            className="h-9 px-4 rounded-lg border border-slate-200 text-slate-500 text-sm font-medium hover:bg-slate-50 transition-colors flex items-center"
+          >
+            Clear
+          </a>
+        )}
+      </form>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table className="w-full text-sm">
@@ -27,6 +81,7 @@ export default async function AdminCandidatesPage() {
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Name</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Email</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Status</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium">CV</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Matches</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Joined</th>
               <th className="px-4 py-3" />
@@ -38,25 +93,41 @@ export default async function AdminCandidatesPage() {
                 <td className="px-4 py-3 font-medium text-slate-800">{c.name ?? "—"}</td>
                 <td className="px-4 py-3 text-slate-500">{c.email}</td>
                 <td className="px-4 py-3">
-                  <Badge variant={STATUS_VARIANT[c.status] ?? "default"}>{c.status}</Badge>
+                  <Badge variant={STATUS_VARIANT[c.status] ?? "default"}>
+                    {c.status.replace("_", " ")}
+                  </Badge>
+                </td>
+                <td className="px-4 py-3">
+                  {c.cvUrl ? (
+                    <span className="text-green-600 text-xs font-medium">✓ Uploaded</span>
+                  ) : (
+                    <span className="text-slate-300 text-xs">—</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-slate-500">{c._count.matches}</td>
                 <td className="px-4 py-3 text-slate-400">{formatDate(c.createdAt)}</td>
                 <td className="px-4 py-3">
-                  <Link href={`/admin/candidates/${c.id}`} className="text-accent hover:underline text-xs font-medium">
-                    View
+                  <Link
+                    href={`/admin/candidates/${c.id}`}
+                    className="text-accent hover:underline text-xs font-medium"
+                  >
+                    View →
                   </Link>
                 </td>
               </tr>
             ))}
             {candidates.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-slate-400">No candidates yet.</td>
+                <td colSpan={7} className="px-4 py-10 text-center text-slate-400">
+                  {q || status ? "No candidates match your filters." : "No candidates yet."}
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      <p className="mt-3 text-xs text-slate-400">{candidates.length} candidate{candidates.length !== 1 ? "s" : ""}</p>
     </div>
   );
 }
