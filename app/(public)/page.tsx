@@ -20,7 +20,7 @@ export default async function LandingPage() {
             <span className="text-accent">just for you</span>
           </h1>
           <p className="mt-5 text-lg text-white/80 max-w-xl mx-auto">
-            No algorithms. A real human reviews your profile and personally matches you to roles that fit. Subscribe free.
+            No algorithms. No AI. Ok, we used AI to build this. But a real human team reviews your profile and personally matches you to roles that fit. Subscribe free.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/subscribe">

@@ -19,9 +19,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen flex">
       <AdminSidebar userEmail={session?.user.email ?? undefined} />
 
-      {/* Content — pt-14 offsets the fixed mobile top bar */}
-      <main className="flex-1 bg-slate-50 pt-14 lg:pt-0 p-4 sm:p-6 lg:p-8 overflow-auto">
-        {children}
+      {/* mt-14 on mobile clears the fixed top bar, then p-* adds proper breathing room */}
+      <main className="flex-1 bg-slate-50 overflow-auto">
+        <div className="mt-14 lg:mt-0 p-4 sm:p-6 lg:p-8">
+          {children}
+        </div>
       </main>
     </div>
   );

@@ -17,10 +17,10 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = (user as { id: string }).id;
-        session.user.isAdmin = adminEmails.includes(user.email ?? "");
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+        session.user.isAdmin = adminEmails.includes(session.user.email ?? "");
       }
       return session;
     },
