@@ -40,7 +40,7 @@ export default async function AdminCandidatesPage({ searchParams }: Props) {
       <h1 className="text-2xl font-bold text-primary mb-6">Candidates</h1>
 
       {/* Filters */}
-      <form method="GET" className="flex gap-3 mb-6">
+      <form method="GET" className="flex flex-wrap gap-3 mb-6">
         <input
           type="text"
           name="q"
@@ -74,42 +74,45 @@ export default async function AdminCandidatesPage({ searchParams }: Props) {
         )}
       </form>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
+        <table className="w-full text-sm min-w-[560px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Name</th>
-              <th className="text-left px-4 py-3 text-slate-500 font-medium">Email</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden sm:table-cell">Email</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Status</th>
-              <th className="text-left px-4 py-3 text-slate-500 font-medium">CV</th>
-              <th className="text-left px-4 py-3 text-slate-500 font-medium">Matches</th>
-              <th className="text-left px-4 py-3 text-slate-500 font-medium">Joined</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden md:table-cell">CV</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden sm:table-cell">Matches</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden lg:table-cell">Joined</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {candidates.map((c) => (
               <tr key={c.id} className="hover:bg-slate-50 transition-colors">
-                <td className="px-4 py-3 font-medium text-slate-800">{c.name ?? "—"}</td>
-                <td className="px-4 py-3 text-slate-500">{c.email}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">
+                  <span>{c.name ?? "—"}</span>
+                  <span className="block sm:hidden text-xs text-slate-400 font-normal">{c.email}</span>
+                </td>
+                <td className="px-4 py-3 text-slate-500 hidden sm:table-cell">{c.email}</td>
                 <td className="px-4 py-3">
                   <Badge variant={STATUS_VARIANT[c.status] ?? "default"}>
                     {c.status.replace("_", " ")}
                   </Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 hidden md:table-cell">
                   {c.cvUrl ? (
                     <span className="text-green-600 text-xs font-medium">✓ Uploaded</span>
                   ) : (
                     <span className="text-slate-300 text-xs">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-slate-500">{c._count.matches}</td>
-                <td className="px-4 py-3 text-slate-400">{formatDate(c.createdAt)}</td>
+                <td className="px-4 py-3 text-slate-500 hidden sm:table-cell">{c._count.matches}</td>
+                <td className="px-4 py-3 text-slate-400 hidden lg:table-cell">{formatDate(c.createdAt)}</td>
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/candidates/${c.id}`}
-                    className="text-accent hover:underline text-xs font-medium"
+                    className="text-accent hover:underline text-xs font-medium whitespace-nowrap"
                   >
                     View →
                   </Link>

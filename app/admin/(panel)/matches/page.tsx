@@ -18,7 +18,7 @@ export default async function AdminMatchesPage() {
     <div>
       <h1 className="text-2xl font-bold text-primary mb-8">Matches</h1>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid gap-8 lg:grid-cols-2">
         <div>
           <h2 className="font-semibold text-primary mb-4">Create match</h2>
           <MatchForm candidates={candidates} jobs={jobs} />

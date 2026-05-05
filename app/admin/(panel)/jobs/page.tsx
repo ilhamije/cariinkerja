@@ -16,28 +16,31 @@ export default async function AdminJobsPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
+        <table className="w-full text-sm min-w-[420px]">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Title</th>
-              <th className="text-left px-4 py-3 text-slate-500 font-medium">Company</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden sm:table-cell">Company</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Status</th>
-              <th className="text-left px-4 py-3 text-slate-500 font-medium">Date</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden md:table-cell">Date</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {jobs.map((job) => (
               <tr key={job.id} className="hover:bg-slate-50 transition-colors">
-                <td className="px-4 py-3 font-medium text-slate-800">{job.title}</td>
-                <td className="px-4 py-3 text-slate-500">{job.company}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">
+                  <span>{job.title}</span>
+                  <span className="block sm:hidden text-xs text-slate-400 font-normal">{job.company}</span>
+                </td>
+                <td className="px-4 py-3 text-slate-500 hidden sm:table-cell">{job.company}</td>
                 <td className="px-4 py-3">
                   <Badge variant={job.published ? "success" : "warning"}>
                     {job.published ? "Published" : "Draft"}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-slate-400">{formatDate(job.createdAt)}</td>
+                <td className="px-4 py-3 text-slate-400 hidden md:table-cell">{formatDate(job.createdAt)}</td>
                 <td className="px-4 py-3">
                   <Link href={`/admin/jobs/${job.id}/edit`} className="text-accent hover:underline text-xs font-medium">
                     Edit
