@@ -6,9 +6,10 @@ import Link from "next/link";
 interface Props {
   isLoggedIn: boolean;
   isAdmin: boolean;
+  signOut: () => Promise<void>;
 }
 
-export default function NavMobileMenu({ isLoggedIn, isAdmin }: Props) {
+export default function NavMobileMenu({ isLoggedIn, isAdmin, signOut }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -55,7 +56,7 @@ export default function NavMobileMenu({ isLoggedIn, isAdmin }: Props) {
             )}
             <div className="border-t border-slate-100 mt-1 pt-1">
               {isLoggedIn ? (
-                <form action="/api/auth/signout" method="POST">
+                <form action={signOut}>
                   <button
                     type="submit"
                     className="w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-700 hover:bg-slate-50 transition-colors"

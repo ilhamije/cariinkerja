@@ -8,20 +8,21 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String?
-  image        String?
-  provider     String   @default("google")
-  linkedinUrl  String?
-  cvUrl        String?
-  cvUploadedAt DateTime?
-  status       String   @default("PENDING")
-  preferences  String?
-  createdAt    DateTime @default(now())
-  matches      Match[]
-  accounts     Account[]
-  sessions     Session[]
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  provider      String    @default("google")
+  linkedinUrl   String?
+  cvUrl         String?
+  cvUploadedAt  DateTime?
+  status        String    @default("PENDING")
+  preferences   String?
+  createdAt     DateTime  @default(now())
+  matches       Match[]
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Job {

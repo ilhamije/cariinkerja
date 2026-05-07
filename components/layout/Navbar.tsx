@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { auth, signOut } from "@/lib/auth";
 import Button from "@/components/ui/Button";
 import NavMobileMenu from "@/components/layout/NavMobileMenu";
 
@@ -7,6 +7,11 @@ export default async function Navbar() {
   const session = await auth();
   const isLoggedIn = !!session;
   const isAdmin = !!session?.user.isAdmin;
+
+  async function handleSignOut() {
+    "use server";
+    await signOut({ redirectTo: "/" });
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
@@ -34,7 +39,7 @@ export default async function Navbar() {
                   Admin
                 </Link>
               )}
-              <form action="/api/auth/signout" method="POST">
+              <form action={handleSignOut}>
                 <Button variant="outline" size="sm" type="submit">Sign out</Button>
               </form>
             </>
@@ -46,7 +51,7 @@ export default async function Navbar() {
         </nav>
 
         {/* Mobile hamburger */}
-        <NavMobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
+        <NavMobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} signOut={handleSignOut} />
       </div>
     </header>
   );
