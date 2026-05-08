@@ -70,6 +70,23 @@ export default function JobForm({ job }: { job?: Job }) {
         placeholder="e.g. React, TypeScript, Remote"
       />
 
+      <Input
+        label="External apply link (optional)"
+        id="applyUrl"
+        name="applyUrl"
+        type="url"
+        defaultValue={job?.applyUrl ?? ""}
+        placeholder="https://linkedin.com/jobs/... or https://indeed.com/..."
+      />
+
+      <Input
+        label="Expiry date (blank = never expires)"
+        id="expiresAt"
+        name="expiresAt"
+        type="date"
+        defaultValue={job?.expiresAt ? job.expiresAt.toISOString().split('T')[0] : ""}
+      />
+
       <Textarea
         label="Job description"
         id="description"

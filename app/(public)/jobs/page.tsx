@@ -3,7 +3,13 @@ import JobCard from "@/components/jobs/JobCard";
 
 export default async function JobsPage() {
   const jobs = await prisma.job.findMany({
-    where: { published: true },
+    where: {
+      published: true,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } },
+      ],
+    },
     orderBy: { createdAt: "desc" },
   });
 

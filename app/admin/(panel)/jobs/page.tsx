@@ -61,6 +61,7 @@ export default async function AdminJobsPage({ searchParams }: Props) {
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Title</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium hidden sm:table-cell">Company</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium">Status</th>
+              <th className="text-left px-4 py-3 text-slate-500 font-medium hidden lg:table-cell">Expires</th>
               <th className="text-left px-4 py-3 text-slate-500 font-medium hidden md:table-cell">Date</th>
               <th className="px-4 py-3" />
             </tr>
@@ -78,6 +79,15 @@ export default async function AdminJobsPage({ searchParams }: Props) {
                     {job.published ? "Published" : "Draft"}
                   </Badge>
                 </td>
+                <td className="px-4 py-3 text-slate-400 hidden lg:table-cell">
+                  {job.expiresAt === null ? (
+                    <span className="text-slate-500">Never</span>
+                  ) : job.expiresAt < new Date() ? (
+                    <Badge variant="danger">Expired</Badge>
+                  ) : (
+                    formatDate(job.expiresAt)
+                  )}
+                </td>
                 <td className="px-4 py-3 text-slate-400 hidden md:table-cell">{formatDate(job.createdAt)}</td>
                 <td className="px-4 py-3">
                   <Link
@@ -91,7 +101,7 @@ export default async function AdminJobsPage({ searchParams }: Props) {
             ))}
             {jobs.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-slate-400">
+                <td colSpan={6} className="px-4 py-10 text-center text-slate-400">
                   {q || status ? "No jobs match your filters." : "No jobs yet."}
                 </td>
               </tr>

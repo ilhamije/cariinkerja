@@ -11,8 +11,11 @@ interface Props {
 
 export default async function JobDetailPage({ params }: Props) {
   const { slug } = await params;
-  const job = await prisma.job.findUnique({ where: { slug, published: true } });
+  const job = await prisma.job.findUnique({
+    where: { slug, published: true },
+  });
   if (!job) notFound();
+  if (job.expiresAt && job.expiresAt < new Date()) notFound();
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
@@ -26,9 +29,15 @@ export default async function JobDetailPage({ params }: Props) {
             <h1 className="text-2xl font-bold text-primary">{job.title}</h1>
             <p className="text-lg text-slate-600 mt-1">{job.company}</p>
           </div>
-          <Link href="/subscribe">
-            <Button>Apply via profile</Button>
-          </Link>
+          {job.applyUrl ? (
+            <a href={job.applyUrl} target="_blank" rel="noopener noreferrer">
+              <Button>Apply now →</Button>
+            </a>
+          ) : (
+            <Link href="/subscribe">
+              <Button>Apply via profile</Button>
+            </Link>
+          )}
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">

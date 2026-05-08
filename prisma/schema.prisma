@@ -37,6 +37,8 @@ model Job {
   tags        String   @default("")
   slug        String   @unique
   published   Boolean  @default(false)
+  expiresAt   DateTime?
+  applyUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   matches     Match[]
