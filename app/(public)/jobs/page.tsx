@@ -5,9 +5,13 @@ export default async function JobsPage() {
   const jobs = await prisma.job.findMany({
     where: {
       published: true,
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gt: new Date() } },
+      AND: [
+        {
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gt: new Date() } },
+          ],
+        },
       ],
     },
     orderBy: { createdAt: "desc" },
