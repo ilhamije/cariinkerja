@@ -7,6 +7,14 @@ import CandidateJobMatcher from "@/components/admin/CandidateJobMatcher";
 import RemoveMatchButton from "@/components/admin/RemoveMatchButton";
 import Link from "next/link";
 
+const MATCH_STATUS_VARIANT: Record<string, "warning" | "accent" | "success" | "default" | "danger"> = {
+  PENDING: "warning",
+  NOTIFIED: "accent",
+  VIEWED: "default",
+  APPLIED: "success",
+  DISMISSED: "danger",
+};
+
 const STATUS_VARIANT: Record<string, "warning" | "accent" | "success" | "default"> = {
   PENDING: "warning",
   UNDER_REVIEW: "accent",
@@ -141,10 +149,10 @@ export default async function AdminCandidateDetailPage({ params }: Props) {
                   {m.matchRate != null && (
                     <span className="text-xs text-slate-400">{m.matchRate}% match</span>
                   )}
-                  {m.notified && (
-                    <span className="text-xs text-green-600">Notified</span>
-                  )}
-                  <span className="text-xs text-slate-300">{formatDate(m.createdAt)}</span>
+                  <Badge variant={MATCH_STATUS_VARIANT[m.status] ?? "default"} className="text-xs">
+                    {m.status}
+                  </Badge>
+                  <span className="text-xs text-slate-300 ml-auto">{formatDate(m.createdAt)}</span>
                 </div>
                 {m.note && <p className="text-xs text-slate-400 mt-1">{m.note}</p>}
               </div>

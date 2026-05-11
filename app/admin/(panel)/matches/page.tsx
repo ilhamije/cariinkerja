@@ -35,8 +35,14 @@ export default async function AdminMatchesPage() {
                   {m.matchRate != null && (
                     <Badge variant="accent">{m.matchRate}% match</Badge>
                   )}
-                  <Badge variant={m.notified ? "success" : "warning"}>
-                    {m.notified ? "Notified" : "Pending notify"}
+                  <Badge variant={
+                    m.status === "PENDING" ? "warning" :
+                    m.status === "NOTIFIED" ? "accent" :
+                    m.status === "VIEWED" ? "default" :
+                    m.status === "APPLIED" ? "success" :
+                    "danger"
+                  }>
+                    {m.status}
                   </Badge>
                   <span className="text-xs text-slate-400 ml-auto">{formatDate(m.createdAt)}</span>
                 </div>

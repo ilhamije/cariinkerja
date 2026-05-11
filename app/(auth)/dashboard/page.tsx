@@ -4,6 +4,7 @@ import JobCard from "@/components/jobs/JobCard";
 import Badge from "@/components/ui/Badge";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import DashboardMatches from "@/components/dashboard/DashboardMatches";
 
 const STATUS_LABEL: Record<string, { label: string; variant: "warning" | "accent" | "success" | "default" | "outline" | "danger" }> = {
   PENDING: { label: "Profile under review", variant: "warning" },
@@ -71,11 +72,7 @@ export default async function DashboardPage() {
           <p className="text-sm mt-1">Our curator will notify you when a great role comes up.</p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 gap-4">
-          {user.matches.map((match) => (
-            <JobCard key={match.id} job={match.job} matchRate={match.matchRate} />
-          ))}
-        </div>
+        <DashboardMatches matches={user.matches} />
       )}
     </div>
   );

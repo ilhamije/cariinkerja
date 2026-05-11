@@ -44,16 +44,24 @@ model Job {
   matches     Match[]
 }
 
+enum MatchStatus {
+  PENDING
+  NOTIFIED
+  VIEWED
+  APPLIED
+  DISMISSED
+}
+
 model Match {
-  id        String   @id @default(cuid())
+  id        String      @id @default(cuid())
   userId    String
   jobId     String
-  notified  Boolean  @default(false)
+  status    MatchStatus @default(PENDING)
   note      String?
   matchRate Int?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job       Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@unique([userId, jobId])
 }
