@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Begawi - Job Matching Platform
 
-## Getting Started
+A curated job matching platform built with Next.js, where a human team reviews candidate profiles and personally matches them to relevant roles.
 
-First, run the development server:
+## Features
+
+### User Features
+- **Social Sign-in**: Login with Google or LinkedIn
+- **Profile Management**: Upload CV, share LinkedIn profile, set job preferences
+- **Job Discovery**: Browse and search curated job openings
+- **Job Matching**: Automated matching algorithm pairs candidates with relevant roles
+
+### Admin Features
+- **Job Management**: Create, edit, and manage job postings
+- **Candidate Management**: View candidate profiles and match them with jobs
+- **Search & Filters**: Advanced search and filtering for jobs and candidates
+
+## Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TailwindCSS
+- **Backend**: Next.js API routes, Prisma ORM
+- **Database**: PostgreSQL (via Supabase)
+- **Authentication**: NextAuth.js with OAuth (Google, LinkedIn)
+- **File Storage**: Supabase Storage (for CV uploads)
+- **Email**: Resend (for notifications)
+
+## Setup & Installation
+
+### 1. Clone & Install Dependencies
+```bash
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Create `.env.local` with:
+
+```env
+# Database - Get from Supabase Dashboard > Settings > Database > Connection String
+DATABASE_URL="postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgres"
+
+# NextAuth
+NEXTAUTH_SECRET="<generate with: openssl rand -base64 32>"
+NEXTAUTH_URL="http://localhost:3001"
+
+# OAuth Providers
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+LINKEDIN_CLIENT_ID=""
+LINKEDIN_CLIENT_SECRET=""
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=""
+NEXT_PUBLIC_SUPABASE_ANON_KEY=""
+SUPABASE_SERVICE_ROLE_KEY=""
+
+# Email Service
+RESEND_API_KEY=""
+RESEND_FROM=""
+
+# Admin Access
+ADMIN_EMAILS="your.email@example.com"
+ADMIN_PASSWORD="your-password"
+```
+
+### 3. Set Up Database
+
+```bash
+# Run migrations to create tables
+npx prisma migrate deploy
+
+# (Optional) Seed database
+npx prisma db seed
+```
+
+### 4. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3001](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` - Landing page
+- `/subscribe` - Sign up / Login with OAuth
+- `/jobs` - Browse and search job listings
+- `/profile` - User profile management
+- `/dashboard` - Candidate dashboard
+- `/admin` - Admin panel for job and candidate management
 
-## Learn More
+## Recent Updates (2026-05-12)
 
-To learn more about Next.js, take a look at the following resources:
+### Database Migration
+- **Changed**: SQLite → PostgreSQL (Supabase)
+- **Why**: SQLite doesn't work in Vercel (filesystem is ephemeral). PostgreSQL is production-ready.
+- **Action Required**: Update `.env.local` with your Supabase connection string and run `npx prisma migrate deploy`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### LinkedIn Profile Auto-Population
+- LinkedIn profile URL is now automatically captured when users sign in
+- Pre-populates the LinkedIn URL field in the profile form
+- Users can still manually edit their LinkedIn profile URL
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Public Jobs Search
+- Added search functionality to `/jobs` page
+- Search by job title or company (same as admin)
+- Matches admin page capabilities
 
-## Deploy on Vercel
+### Mobile UI Fix
+- Fixed text wrapping for "just for you" heading on mobile devices
+- Better responsive layout on small screens
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Build Pipeline
+- Added `postinstall` script for Prisma client generation
+- Fixed Vercel build errors
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+### To Vercel
+
+1. Push code to GitHub
+2. Connect repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy - `npm run build` will automatically run migrations
+
+### Environment Variables for Production
+
+```env
+DATABASE_URL=postgresql://...  # Your Supabase connection string
+NEXTAUTH_SECRET=<generate-new-secret>
+NEXTAUTH_URL=https://your-domain.com
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+LINKEDIN_CLIENT_ID=...
+LINKEDIN_CLIENT_SECRET=...
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+RESEND_API_KEY=...
+RESEND_FROM=...
+ADMIN_EMAILS=your.email@example.com
+ADMIN_PASSWORD=...
+```
+
+## Project Structure
+
+```
+myapp/
+├── app/                    # Next.js app routes
+│   ├── (public)/          # Public pages
+│   ├── (auth)/            # Protected routes
+│   └── admin/             # Admin panel
+├── components/            # React components
+│   ├── admin/            # Admin components
+│   ├── candidates/       # Candidate components
+│   ├── jobs/             # Job components
+│   └── ui/               # UI components
+├── lib/                  # Utilities & services
+│   ├── actions/          # Server actions
+│   ├── auth.ts           # NextAuth config
+│   └── prisma.ts         # Prisma client
+├── prisma/               # Database schema
+└── public/               # Static assets
+```
+
+## Development Notes
+
+- Uses Prisma for database ORM
+- Server-side rendering with Next.js App Router
+- TailwindCSS for styling with custom components
+- NextAuth.js for authentication
+- Form handling with server actions
+
+## Support
+
+For issues or questions, check the GitHub repository or contact the development team.
