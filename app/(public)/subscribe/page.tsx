@@ -10,7 +10,7 @@ export default async function SubscribePage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-primary">Join CariinKerja</h1>
+          <h1 className="text-2xl font-bold text-primary">Join Begawi</h1>
           <p className="mt-2 text-slate-600 text-sm">
             Subscribe free. We&apos;ll match you to curated jobs personally.
           </p>

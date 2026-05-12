@@ -17,7 +17,7 @@ export default async function Navbar() {
     <header className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">CariinKerja</span>
+          <span className="text-xl font-bold text-primary">Begawi</span>
           <span className="hidden sm:inline text-xs bg-accent/20 text-primary px-2 py-0.5 rounded-full font-medium">
             Curated
           </span>

@@ -61,7 +61,7 @@ export default function AdminSidebar({ userEmail }: { userEmail?: string }) {
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-56 shrink-0 bg-primary text-white flex-col">
         <div className="p-5 border-b border-white/10">
-          <Link href="/" className="text-lg font-bold">CariinKerja</Link>
+          <Link href="/" className="text-lg font-bold">Begawi</Link>
           <p className="text-xs text-white/60 mt-0.5">Admin panel</p>
         </div>
         <NavLinks />
@@ -70,7 +70,7 @@ export default function AdminSidebar({ userEmail }: { userEmail?: string }) {
 
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-primary text-white h-14 flex items-center justify-center px-4 shadow-md">
-        <Link href="/" className="text-base font-bold">CariinKerja</Link>
+        <Link href="/" className="text-base font-bold">Begawi</Link>
       </div>
 
       {/* Sticky note toggle — replaces hamburger, visible on mobile */}

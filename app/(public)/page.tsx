@@ -16,16 +16,16 @@ export default async function LandingPage() {
       <section className="bg-primary text-white py-24 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
-            Jobs curated{" "}
-            <span className="text-accent">just for you</span>
+            Jobs curated
+            <span className="block sm:inline text-accent">just for you</span>
           </h1>
           <p className="mt-5 text-lg text-white/80 max-w-xl mx-auto">
-            No algorithms. No AI. Ok, we used AI to build this. But a real human team reviews your profile and personally matches you to roles that fit. Subscribe free.
+            No algorithms. No AI. A real human team reviews your profile and personally matches you to roles that fit.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/subscribe">
               <Button variant="secondary" size="lg">
-                Subscribe — it&apos;s free
+                Subscribe — Always Free
               </Button>
             </Link>
             <Link href="/jobs">

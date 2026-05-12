@@ -1,7 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import JobCard from "@/components/jobs/JobCard";
+import JobsFilter from "@/components/jobs/JobsFilter";
 
-export default async function JobsPage() {
+interface Props {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export default async function JobsPage({ searchParams }: Props) {
+  const { q } = await searchParams;
+
   const jobs = await prisma.job.findMany({
     where: {
       published: true,
@@ -13,6 +20,14 @@ export default async function JobsPage() {
           ],
         },
       ],
+      ...(q
+        ? {
+            OR: [
+              { title: { contains: q } },
+              { company: { contains: q } },
+            ],
+          }
+        : {}),
     },
     orderBy: { createdAt: "desc" },
   });
@@ -24,9 +39,11 @@ export default async function JobsPage() {
         <p className="mt-2 text-slate-600">{jobs.length} curated {jobs.length === 1 ? "role" : "roles"}</p>
       </div>
 
+      <JobsFilter q={q} />
+
       {jobs.length === 0 ? (
         <div className="text-center py-20 text-slate-400">
-          <p className="text-lg">No jobs posted yet.</p>
+          <p className="text-lg">{q ? "No jobs match your search." : "No jobs posted yet."}</p>
           <p className="text-sm mt-1">Check back soon.</p>
         </div>
       ) : (
